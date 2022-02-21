@@ -249,6 +249,13 @@ void TLSv12::build_rsa_pre_master_secret(PacketBuilder& builder)
 
 void TLSv12::build_dhe_rsa_pre_master_secret(PacketBuilder& builder)
 {
+    const auto& certificate_option = verify_chain_and_get_matching_certificate(m_context.extensions.SNI); // if the SNI is empty, we'll make a special case and match *a* leaf certificate.
+    if (!certificate_option.has_value()) {
+        dbgln("certificate verification failed :(");
+        alert(AlertLevel::Critical, AlertDescription::BadCertificate);
+        return;
+    }
+
     auto& dh = m_context.server_diffie_hellman_params;
     auto dh_p = Crypto::UnsignedBigInteger::import_data(dh.p.data(), dh.p.size());
     auto dh_g = Crypto::UnsignedBigInteger::import_data(dh.g.data(), dh.g.size());
@@ -296,6 +303,13 @@ void TLSv12::build_dhe_rsa_pre_master_secret(PacketBuilder& builder)
 
 void TLSv12::build_ecdhe_rsa_pre_master_secret(PacketBuilder& builder)
 {
+    const auto& certificate_option = verify_chain_and_get_matching_certificate(m_context.extensions.SNI); // if the SNI is empty, we'll make a special case and match *a* leaf certificate.
+    if (!certificate_option.has_value()) {
+        dbgln("certificate verification failed :(");
+        alert(AlertLevel::Critical, AlertDescription::BadCertificate);
+        return;
+    }
+
     size_t const key_size = named_curve_key_size(NamedCurve::x25519) / 8;
     u8 generator_point[key_size] { 9 };
     ReadonlyBytes generator_point_bytes { generator_point, key_size };
