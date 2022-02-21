@@ -258,6 +258,7 @@ struct Options {
 
 struct Context {
     bool verify_chain() const;
+    bool verify_certificate_pair(Certificate& subject, Certificate& issuer) const;
 
     Options options;
 
@@ -317,7 +318,7 @@ struct Context {
     // message flags
     u8 handshake_messages[11] { 0 };
     ByteBuffer user_data;
-    Vector<Certificate> root_certificates;
+    HashMap<String, Certificate> root_certificates;
 
     Vector<String> alpn;
     StringView negotiated_alpn;
