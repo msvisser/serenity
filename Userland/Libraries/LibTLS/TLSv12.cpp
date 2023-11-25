@@ -208,7 +208,7 @@ void TLSv12::set_root_certificates(Vector<Certificate> certificates)
 
     for (auto& cert : certificates) {
         if (!cert.is_valid()) {
-            dbgln("Certificate for {} by {} is invalid, things may or may not work!", cert.subject.common_name(), cert.issuer.common_name());
+            dbgln("Root certificate for {} is invalid, things may or may not work!", cert.subject.to_string());
         }
         // FIXME: Figure out what we should do when our root certs are invalid.
 
@@ -401,6 +401,8 @@ bool Context::verify_certificate_pair(Certificate const& subject, Certificate co
     // ECDSA hash verification: hash, then check signature against the specific curve
     switch (issuer.public_key.algorithm.ec_parameters) {
     case SupportedGroup::SECP256R1: {
+        dbgln("verify_certificate_pair: Checking SECP256r1 signature");
+
         Crypto::Hash::Manager hasher(kind);
         hasher.update(subject.tbs_asn1.bytes());
         auto hash = hasher.digest();
@@ -414,6 +416,8 @@ bool Context::verify_certificate_pair(Certificate const& subject, Certificate co
         return result.value();
     }
     case SupportedGroup::SECP384R1: {
+        dbgln("verify_certificate_pair: Checking SECP384r1 signature");
+
         Crypto::Hash::Manager hasher(kind);
         hasher.update(subject.tbs_asn1.bytes());
         auto hash = hasher.digest();

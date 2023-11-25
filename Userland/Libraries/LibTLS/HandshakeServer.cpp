@@ -315,9 +315,11 @@ ssize_t TLSv12::handle_ecdhe_server_key_exchange(ReadonlyBytes buffer, u8& serve
         m_context.server_key_exchange_curve = make<Crypto::Curves::X448>();
         break;
     case SupportedGroup::SECP256R1:
+        dbgln("handle_ecdhe_server_key_exchange: secp256r1");
         m_context.server_key_exchange_curve = make<Crypto::Curves::SECP256r1>();
         break;
     case SupportedGroup::SECP384R1:
+        dbgln("handle_ecdhe_server_key_exchange: secp384r1");
         m_context.server_key_exchange_curve = make<Crypto::Curves::SECP384r1>();
         break;
     default:
@@ -488,6 +490,7 @@ ssize_t TLSv12::verify_ecdsa_server_key_exchange(ReadonlyBytes server_key_info_b
     auto& public_key = m_context.certificates.first().public_key;
     switch (public_key.algorithm.ec_parameters) {
     case SupportedGroup::SECP256R1: {
+        dbgln("verify_ecdsa_server_key_exchange: secp256r1");
         Crypto::Hash::Manager manager(hash_kind);
         manager.update(message);
         auto digest = manager.digest();
@@ -497,6 +500,7 @@ ssize_t TLSv12::verify_ecdsa_server_key_exchange(ReadonlyBytes server_key_info_b
         break;
     }
     case SupportedGroup::SECP384R1: {
+        dbgln("verify_ecdsa_server_key_exchange: secp384r1");
         Crypto::Hash::Manager manager(hash_kind);
         manager.update(message);
         auto digest = manager.digest();

@@ -206,7 +206,10 @@ TEST_CASE(test_secp256r1)
 
     Crypto::Curves::SECP256r1 curve;
 
-    auto generated_alice_public = MUST(curve.generate_public_key(alice_private_key));
+    auto result = curve.generate_public_key(alice_private_key);
+    if (result.is_error())
+        dbgln("{}", result.error());
+    auto generated_alice_public = MUST(result);
     EXPECT_EQ(alice_public_key, generated_alice_public);
 
     auto generated_bob_public = MUST(curve.generate_public_key(bob_private_key));

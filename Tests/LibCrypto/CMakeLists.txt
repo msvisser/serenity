@@ -6,6 +6,7 @@ set(TEST_SOURCES
     TestChaCha20.cpp
     TestChacha20Poly1305.cpp
     TestCurves.cpp
+    TestCurvesBenchmark.cpp
     TestEd25519.cpp
     TestHash.cpp
     TestHMAC.cpp

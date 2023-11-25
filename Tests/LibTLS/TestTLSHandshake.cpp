@@ -16,7 +16,7 @@
 static StringView ca_certs_file = "./cacert.pem"sv;
 static int port = 443;
 
-constexpr auto DEFAULT_SERVER = "www.google.com"sv;
+constexpr auto DEFAULT_SERVER = "rsms.me"sv;
 
 static ByteBuffer operator""_b(char const* string, size_t length)
 {
